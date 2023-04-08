@@ -2,5 +2,5 @@
 3.93.201.99
 
 [docker_ec2_server:vars]
-ansible_ssh_private_key_file=~/ssh-key.pem
+ansible_ssh_private_key_file=~/home/ubuntussh-key.pem
 ansible_user=ubuntu

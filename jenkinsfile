@@ -7,10 +7,10 @@ pipeline{
                      echo "copying all neccessary files"
 
                     sshagent(credentials: ['ssh-ansible-server']) {
-                        sh "scp -o StrictHostKeyChecking=no ansilbe/* ubuntu@54.226.129.240:/ubuntu"
+                        sh "scp -o StrictHostKeyChecking=no ansilbe/* ubuntu@54.226.129.240:/home/ubuntu"
                         
                         withCredentials([sshUserPrivateKey(credentialsId: "ssh-ec2-key", keyFileVariable: 'keyfile')]) {
-                            sh "scp $keyfile ubuntu@54.226.129.240:/ubuntu/ssh-key.pem"
+                            sh "scp $keyfile ubuntu@54.226.129.240:/home/ubuntu/ssh-key.pem"
                         }
                     }
                 }
