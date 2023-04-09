@@ -27,7 +27,9 @@ pipeline{
                     remote.name = "ansible-server"
                     remote.host = "54.163.193.185"
                     remote.allowAnyHosts = true
-
+                    sshagent(credentials: ['ssh-ec2-key']) {
+                        sh "ls"
+                    }
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh-ansible-server', keyFileVariable: 'keyfile', usernameVariable: 'user')]){
                         remote.user = user
                         remote.identityFile = keyfile
