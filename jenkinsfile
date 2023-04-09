@@ -10,9 +10,7 @@ pipeline{
                         sh "scp -o StrictHostKeyChecking=no ansilbe/* ubuntu@54.163.193.185:/home/ubuntu"
                         
                         withCredentials([sshUserPrivateKey(credentialsId: "ssh-ec2-key", keyFileVariable: 'keyfile')]) {
-                            sh 'rm -f ssh-key.pem'
                             sh 'scp $keyfile ubuntu@54.163.193.185:/home/ubuntu/ssh-key.pem'
-                            
                         }
                     }
                 }
@@ -33,7 +31,7 @@ pipeline{
                     withCredentials([sshUserPrivateKey(credentialsId: "ssh-ec2-key", usernameVariable:"username", keyFileVariable: 'keyfile')]) {
                         remote.user = username
                         remote.identityFile = keyfile
-                        sshCommand remote:remote, command: "ls -l"
+                        sshCommand remote:remote, command: "ls -l" , sudo: true
                     }
                 }   
             }
