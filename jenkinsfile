@@ -7,38 +7,34 @@ pipeline{
                      echo "copying all neccessary files"
 
                     sshagent(credentials: ['ssh-ansible-server']) {
-                        sh "scp -o StrictHostKeyChecking=no ansilbe/* ubuntu@54.226.129.240:/home/ubuntu"
+                        sh "scp -o StrictHostKeyChecking=no ansilbe/* ubuntu@54.163.193.185:/home/ubuntu"
                         
                         withCredentials([sshUserPrivateKey(credentialsId: "ssh-ec2-key", keyFileVariable: 'keyfile')]) {
-                            sh "scp $keyfile ubuntu@54.226.129.240:/home/ubuntu/ssh-key.pem"
+                            sh "scp $keyfile ubuntu@54.163.193.185:/home/ubuntu/ssh-key.pem"
                         }
                     }
                 }
 
             
             }
-            post{
-                always{
-                    echo "========always========"
-                }
-                success{
-                    echo "========A executed successfully========"
-                }
-                failure{
-                    echo "========A execution failed========"
-                }
+        }
+
+        stage("run ansible command on remote server"){
+            steps{
+                script{
+                    echo "calling ansible playbook to config ec2"
+                    def remote = [:]
+                    remote.name = 'static-ec2'
+                    remote.host = '54.221.154.221'
+                    remote.allowAnyHosts = true
+
+                    withCredentials([sshUserPrivateKey(credentialsId: "ssh-ec2-key", usernameVariable:"username", keyFileVariable: 'keyfile')]) {
+                        remote.user = username
+                        remote.identityFile = keyfile
+                        sshCommand remote: remote, command: "ls -lrt"
+                    }
+                }   
             }
-        }
-    }
-    post{
-        always{
-            echo "========always========"
-        }
-        success{
-            echo "========pipeline executed successfully ========"
-        }
-        failure{
-            echo "========pipeline execution failed========"
         }
     }
 }
