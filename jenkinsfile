@@ -24,12 +24,12 @@ pipeline{
                 script{
                     echo "calling ansible playbook to config ec2"
                     def remote = [:]
-                    remote.name = 'ubuntu'
+                    remote.name = 'ansible-server'
                     remote.host = '54.163.193.185'
                     remote.allowAnyHosts = true
 
-                    withCredentials([sshUserPrivateKey(credentialsId: "ssh-ansible-server", usernameVariable:"username", keyFileVariable: 'keyfile')]) {
-                        remote.user = username
+                    withCredentials([sshUserPrivateKey(credentialsId: "ssh-ansible-server", usernameVariable:"user", keyFileVariable: 'keyfile')]) {
+                        remote.user = user
                         remote.identityFile = keyfile
                         sshCommand remote: remote, command: "ls -lrt"
                         sshCommand remote: remote, command: "for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done"
