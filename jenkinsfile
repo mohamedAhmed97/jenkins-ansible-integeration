@@ -10,7 +10,9 @@ pipeline{
                         sh "scp -o StrictHostKeyChecking=no ansilbe/* ubuntu@54.163.193.185:/home/ubuntu"
                         
                         withCredentials([sshUserPrivateKey(credentialsId: "ssh-ec2-key", keyFileVariable: 'keyfile')]) {
-                            sh 'scp $keyfile ubuntu@54.163.193.185:/home/ubuntu/ssh-key.pem'
+                            if (!fileExists('$keyfile')) {
+                                sh 'scp $keyfile ubuntu@54.163.193.185:/home/ubuntu/ssh-key.pem'
+                            }
                         }
                     }
                 }
